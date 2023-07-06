@@ -33,6 +33,7 @@ julia> doprint(v)
 
 julia> arange(v)
 -3:10
+
 julia> v[15]
 0.0
 
