@@ -11,6 +11,7 @@ don't have to worry about what the range is; it just works.
 
 For example
 
+```
 julia> v = AutoVector(0.0)        # default element, determining type
 
 AutoVector{Float64}(1, 0, 0, 0.0, Float64[])
@@ -64,6 +65,7 @@ julia> v[15]      # No resizing, give default
 julia> arange(v)
 
 -3:10
+```
 
 
 AutoVectors have a variety of useful functions implemented, such as dot products and convolutions. 

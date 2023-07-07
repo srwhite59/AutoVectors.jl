@@ -1,4 +1,10 @@
 module AutoVectors
+
+export AutoVector, autovector, mini, maxi, clear!, copy, avdot, doprint, axpy!, convolve, 
+		makeauto,makeautotake,applyshift,avtriple, fast, arange,
+		avlocation, avlocmin,avlocmax,avvec, shrink!, avnorm, avtripconv,reverse_ind,
+		makeAutoVectorOfVecs,pointmult
+
 using LinearAlgebra
 using DSP		# for conv = convolution
 
@@ -579,9 +585,5 @@ end
 
 const autovector = AutoVector
 
-export AutoVector, autovector, mini, maxi, clear!, copy, avdot, doprint, axpy!, convolve, 
-		makeauto,makeautotake,applyshift,avtriple, fast, arange, #  symmetrize!, 
-		avlocation, avlocmin,avlocmax,avvec, shrink!, avnorm, avtripconv,reverse_ind,
-		makeAutoVectorOfVecs,pointmult
 
 end
