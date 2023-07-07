@@ -11,7 +11,7 @@ don't have to worry about what the range is; it just works.
 
 For example
 
-```
+```julia
 julia> v = AutoVector(0.0)        # default element, determining type
 
 AutoVector{Float64}(1, 0, 0, 0.0, Float64[])
