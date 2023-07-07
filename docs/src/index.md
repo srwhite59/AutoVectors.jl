@@ -12,7 +12,6 @@ AutoVector(0.0)
 ## Functions
 
 ```@docs
-makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
 mini(v::AutoVector)
 maxi(v::AutoVector)
 length(v::AutoVector)
@@ -35,6 +34,7 @@ makeauto(v::Vector{Float64},offset::Integer)
 applyshift(x::AutoVector,offset::Integer)
 shrink!(x::AutoVector,cut)
 reverse_ind(x::AutoVector)
+makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
 
 ```
 

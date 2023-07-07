@@ -302,7 +302,7 @@ function avtriple(x::AutoVector,y::AutoVector,z::AutoVector)
 end
 
 """
-    doprint([file io thing],v::AutoVector; spacing = 1)
+    doprint([file descriptor],v::AutoVector; spacing = 1)
 
 Print to standard output or a file all the elements
 """
