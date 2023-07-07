@@ -19,7 +19,7 @@ mutable struct AutoVector{T}  			#   <: AbstractVector{T}   doesn't work
 end
 
 """
-    AutoVector(def::T=0.0,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0) where T
+    AutoVector(def::T=0.0,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0)
     AutoVector(f::Function,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0)
     AutoVector(v::Vector,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0)
 
@@ -31,10 +31,13 @@ or
 
 An AutoVector expands when written to outside its range. Reading outside its range 
 does not expand the range, and gives def, normally 0.0.
+
 Arguments:
 
 def--default element, usually 0.0. 
+
 mini and maxi give the index range of the created AutoVector (logical indices, not index in data vector)
+
 miniloc is the location of mini-1 within the data vector, default 0 (physical index)
 
 You can initialize an AutoVector with the default, from a function, or by putting in a vector.
@@ -71,36 +74,62 @@ function makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
     AutoVector(veczero,mini,maxi,0,dat)
 end
 
-"minimum index"
+"""
+    mini(v::AutoVector)
+mini(v) gives the minimum index
+"""
 mini(v::AutoVector) = v.mini
 
-"maximum index"
+"""
+    maxi(v::AutoVector)
+maxi(v) gives the maximum index
+"""
 maxi(v::AutoVector) = v.maxi
 
 import Base.length
 
-"length of an AutoVector"
+"""
+    length(v::AutoVector)
+length(v) gives the logical length
+"""
 length(v::AutoVector) = v.maxi-v.mini+1
 
-"range of an AutoVector given as a:b"
+"""
+    arange(v::AutoVector)
+arange(v) gives the range of an AutoVector given as a:b
+"""
 arange(v::AutoVector) = mini(v):maxi(v)
 
-"range of overlapping indices of two AutoVectors, given as a:b"
+"""
+    olaprange(v::AutoVector,w::AutoVector)
+olaprange(v,w) gives range of overlapping indices of AutoVectors v and w, given as a:b
+"""
 olaprange(v::AutoVector,w::AutoVector) = max(mini(v),mini(w)):min(maxi(v),maxi(w))
 
-"physical location of logical index i)"
+"""
+    avlocation(v::AutoVector,i)
+avlocation(v,i) gives the physical location of logical index i
+"""
 avlocation(v::AutoVector,i) = i-v.mini+v.miniloc+1
 
-"physical location of mini(v)"
+"""
+    avlocmin(v::AutoVector)
+avlocmin(v) gives the physical location of mini(v)
+"""
 avlocmin(v::AutoVector) = v.miniloc+1
 
-"physical location of maxi(v)"
+"""
+    avlocmax(v::AutoVector)
+avlocmax(v) gives the physical location of mini(v)
+"""
 avlocmax(v::AutoVector) = v.maxi-v.mini+v.miniloc+1
 
-"convert to standard vector, all values from mini to maxi"
+"""
+    avvec(v::AutoVector)
+avvec(v) creates a standard vector with all values from mini to maxi
+"""
 avvec(v::AutoVector) = v.dat[avlocmin(v):avlocmax(v)]
 
-"get the value, but return def outside the range"
 function getindex(v::AutoVector,i::Integer)
 	if length(v.dat) == 0 || i < v.mini || i > v.maxi 
 		return v.def
@@ -108,12 +137,19 @@ function getindex(v::AutoVector,i::Integer)
 	v.dat[avlocation(v,i)]
 end
 
-"get the value, but outside bounds throws range exception"
+"""
+    fast(v::AutoVector,i)
+fast(v,i) is like accessing v[i], but outside bounds throws standard range exception
+combined with @inbounds it will be very fast
+"""
 function fast(v::AutoVector,i)
 	v.dat[i-v.mini+v.miniloc+1]
 end
 
-"Reset an AutoVector to empty"
+"""
+    clear!(v::AutoVector)
+clear!(v) resets v to empty
+"""
 function clear!(v::AutoVector{T}) where {T}
 	v.mini = 1
 	v.maxi = 0
