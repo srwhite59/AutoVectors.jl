@@ -19,7 +19,7 @@ mutable struct AutoVector{T}  			#   <: AbstractVector{T}   doesn't work
 end
 
 """
-    AutoVector(def::T=0.0,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0)
+    AutoVector(def=0.0,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0)
     AutoVector(f::Function,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0)
     AutoVector(v::Vector,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0)
 
@@ -32,7 +32,7 @@ or
 An AutoVector expands when written to outside its range. Reading outside its range 
 does not expand the range, and gives def, normally 0.0.
 
-Arguments:
+ArgumentsXX:
 
 def--default element, usually 0.0. 
 

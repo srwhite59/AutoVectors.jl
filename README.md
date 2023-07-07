@@ -4,7 +4,10 @@ Julia vectors whose first and last indices are any integers
 Most languages make a choice: arrays start at 0 or 1.  For some applications, one would
 like arrays that start and end anywhere, e.g. the array runs from -3 to 10. AutoVectors
 have this property. They also auto-resize based on writing outside their range.  The range is always
-contigous. Reading outside the range gives 0.0 (or whatever the default element is). 
+contigous, and implemented through ordinary vectors, so AutoVectors are fast, say, compared to
+a Dict{Int64,Float64} which might implement similar featues.  Reading outside the range gives 0.0 
+(or whatever the default element is).  Often these properties mean that you
+just don't have to worry about what the range is; it just works.
 
 For example
 
