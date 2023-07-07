@@ -7,7 +7,7 @@ have this property. They also auto-resize based on writing outside their range. 
 contigous, and implemented through ordinary vectors, so AutoVectors are fast, say, compared to
 a Dict{Int64,Float64} which might implement similar featues.  Reading outside the range gives 0.0 
 (or whatever the default element is).  Often these properties mean that you
-just don't have to worry about what the range is; it just works.
+don't have to worry about what the range is; it just works.
 
 For example
 
