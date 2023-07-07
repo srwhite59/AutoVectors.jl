@@ -32,7 +32,7 @@ or
 An AutoVector expands when written to outside its range. Reading outside its range 
 does not expand the range, and gives def, normally 0.0.
 
-ArgumentsXX:
+Arguments:
 
 def--default element, usually 0.0. 
 
