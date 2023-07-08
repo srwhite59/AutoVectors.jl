@@ -5,6 +5,8 @@ on:
     types:
       - closed
 
+  push
+
 jobs:
   build:
     runs-on: ubuntu-latest
