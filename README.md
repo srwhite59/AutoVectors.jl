@@ -69,3 +69,5 @@ julia> arange(v)
 
 
 AutoVectors have a variety of useful functions implemented, such as dot products and convolutions. 
+
+For full documentation, see [documentation](https://srwhite59.github.io/AutoVectors.jl/)
