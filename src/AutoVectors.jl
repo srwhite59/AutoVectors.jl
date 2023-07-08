@@ -72,7 +72,7 @@ end
 """
     makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
 
-Create an AutoVector that holds vectors as elements, index from mini to maxi by v where the zero default vector
+Create an AutoVector that holds Vectors as elements, an AutoVecotr of Vectors. The zero default Vector
 is veczero
 """
 function makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
@@ -102,7 +102,7 @@ length(v::AutoVector) = v.maxi-v.mini+1
 
 """
     avrange(v::AutoVector)
-avrange(v) or arange(v) gives the logical range as mini:maxi
+The logical range as mini:maxi.  A synonym is arange.
 """
 avrange(v::AutoVector) = mini(v):maxi(v)
 
@@ -110,25 +110,25 @@ arange = avrange
 
 """
     olaprange(v::AutoVector,w::AutoVector)
-olaprange(v,w) gives range of overlapping indices of AutoVectors v and w, given as a:b
+olaprange(v,w) gives range of overlapping indices of AutoVectors v and w, given as a:b.
 """
 olaprange(v::AutoVector,w::AutoVector) = max(mini(v),mini(w)):min(maxi(v),maxi(w))
 
 """
     avlocation(v::AutoVector,i)
-avlocation(v,i) gives the data location of logical index i
+The data location of logical index i.
 """
 avlocation(v::AutoVector,i) = i-v.mini+v.miniloc+1
 
 """
     avlocmin(v::AutoVector)
-avlocmin(v) gives the data location of mini(v)
+The data location of mini(v).
 """
 avlocmin(v::AutoVector) = v.miniloc+1
 
 """
     avlocmax(v::AutoVector)
-avlocmax(v) gives the data location of mini(v)
+The data location of maxi(v).
 """
 avlocmax(v::AutoVector) = v.maxi-v.mini+v.miniloc+1
 
@@ -147,8 +147,10 @@ end
 
 """
     fast(v::AutoVector,i)
-fast(v,i) is like accessing v[i], but outside bounds throws standard range exception
-combined with @inbounds it will be very fast
+fast(v,i) is like accessing v[i], but without the check for being outside the logical range. 
+If i is outside, fast  may or may not throw a standard range exception depending on whether i
+lands outside the data vector's range. For use when i is known to be inside the logical range. 
+Combined with @inbounds, there will be no range checking at all, for optimal speed.
 """
 function fast(v::AutoVector,i)
 	v.dat[i-v.mini+v.miniloc+1]
@@ -156,7 +158,7 @@ end
 
 """
     clear!(v::AutoVector)
-clear!(v) resets v to empty
+Resets v to empty
 """
 function clear!(v::AutoVector{T}) where {T}
 	v.mini = 1
@@ -283,7 +285,7 @@ end
 """
     avdot(x::AutoVector,y::AutoVector)
 
-Dot product (no conjugating)
+Dot product (with no complex conjugating), sum_i x_i y_i over the intersection of ranges.
 """
 function avdot(x::AutoVector,y::AutoVector)
     a = max(mini(x),mini(y))
@@ -299,7 +301,7 @@ end
 """
     avtriple(x::AutoVector,y::AutoVector,z::AutoVector)
 
-Triple dot product (no conjugating)
+Triple dot product (with no complex conjugating), sum_i x_i y_i z_i over the intersection of ranges.
 """
 function avtriple(x::AutoVector,y::AutoVector,z::AutoVector)
     res = 0.0
@@ -415,25 +417,20 @@ end
 
 """
     convolve(x::AutoVector,y::AutoVector,cut=1.0e-14)		# use absolute cutoff
-Convolve with cutoff
+Convolve with cutoff; no writing of elements if abs(value) < cut
 """
 function convolve(x::AutoVector,y::AutoVector,cut=1.0e-14)		# use absolute cutoff
     res = AutoVector(x.def)
-#println(maxi(x)-mini(x),"  ",maxi(y)-mini(y))
     if typeof(x.def) == Float64
 	mix = mini(x)
 	mx = maxi(x)
 	mx-mix < 0 && return res
-	#xx = Float64[fast(x,i+mix-1) for i=1:mx-mix+1]
 	xx = avvec(x)
 	miy = mini(y)
 	my = maxi(y)
 	my-miy < 0 && return res
-	#yy = Float64[fast(y,i+miy-1) for i=1:my-miy+1]
 	yy = avvec(y)
-	#@time vres2 = convolvecheck(xx,yy)
 	vres = myconv(xx,yy)
-	#@show norm(vres-vres2)
 	mir = mix+miy
 	minj = 1
 	for j = 1:length(vres)
@@ -448,7 +445,7 @@ function convolve(x::AutoVector,y::AutoVector,cut=1.0e-14)		# use absolute cutof
 	res.maxi=maxj+mir-1
 	res.miniloc=0
     else
-    println("convolving non-Float64 data")
+    println("Warning: convolving non-Float64 data")
 	for j = mini(x):maxi(x)
 	    for k = mini(y):maxi(y)
 		res[j+k] += x[j] * y[k]
@@ -464,7 +461,7 @@ end
 
 """
     makeauto(v::Vector{Float64},offset::Integer)
-Convmake AutoVector out of vector by shifting to left by offset
+Make a new AutoVector out of v, shifting elements to the left by offset. Produces new data vector.
 """
 function makeauto(v::Vector{Float64},offset::Integer)
     res = AutoVector(0.0)
@@ -484,13 +481,13 @@ end
 
 """
     avnorm(v::AutoVector)
-norm of AutoVector
+Norm of AutoVector
 """
 avnorm(v::AutoVector) = norm(v.dat[avlocmin(v):avlocmax(v)])
 
 """
     applyshift(x::AutoVector,offset::Integer)
-Shift to left by offset, no new data array
+Create a new AutoVector shifted to left by offset, sharing the same data array.
 """
 function applyshift(x::AutoVector,offset::Integer)
     AutoVector(x.def,x.mini+offset,x.maxi+offset,x.miniloc,x.dat)
@@ -527,7 +524,7 @@ end
 """
     shrink!(x::AutoVector,cut)
 
-new mini and maxi to zero out tails less than cut
+Adjust mini and maxi to omit tails where all elements are less than cut in absolute value.
 """
 function shrink!(x::AutoVector,cut)
     ami,ama = avlocmin(x),avlocmax(x)
@@ -578,7 +575,7 @@ end
 """
     reverse_ind(x::AutoVector)
 
-new AutoVector goes from -maxi to -mini;  reflection really
+A reflection about the origin; the new AutoVector goes from -maxi to -mini.
 """
 function reverse_ind(x::AutoVector)
     newminiloc = length(x.dat) - (x.miniloc + x.maxi - x.mini + 1)
