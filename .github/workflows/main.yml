@@ -1,11 +1,6 @@
 name: Process Docstrings
 
-on:
-  pull_request:
-    types:
-      - closed
-
-  push
+on: push
 
 jobs:
   build:
