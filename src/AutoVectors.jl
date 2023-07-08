@@ -1,7 +1,7 @@
 module AutoVectors
 
 export AutoVector, autovector, mini, maxi, clear!, copy, avdot, doprint, axpy!, convolve, 
-		makeauto,makeautotake,applyshift,avtriple, fast, arange,
+		makeauto,makeautotake,applyshift,avtriple, fast, avrange, arange,
 		avlocation, avlocmin,avlocmax,avvec, shrink!, avnorm, avtripconv,reverse_ind,
 		makeAutoVectorOfVecs,pointmult
 
@@ -36,19 +36,19 @@ or
     v = AutoVector(0), defaulting to Int64, size 0
 
 An AutoVector expands when written to outside its range. Reading outside its range 
-does not expand the range, and gives def, normally 0.0.
+does not expand the range, and gives def.
 
 Arguments:
 
-def--default element, usually 0.0. 
+def--default element, usually 0.0. Determines the type T of AutoVector{T}
 
 mini and maxi give the index range of the created AutoVector (logical indices, not index in data vector)
 
-miniloc is the location of mini-1 within the data vector, default 0 (physical index)
+miniloc is the location of mini-1 within the data vector, default 0 (data index)
 
 You can initialize an AutoVector with the default, from a function, or by putting in a vector.
 Most functions and constructors deal with logical indices,
-Physical indices refers to location within the data vector dat, which should not be something to
+Data indices refers to location within the data vector dat, which should not be something to
 worry about normally.
 """
 function AutoVector(def=0.0,mini::Integer=1,maxi::Integer=0,miniloc::Integer=0)
@@ -82,13 +82,13 @@ end
 
 """
     mini(v::AutoVector)
-mini(v) gives the minimum index
+Minimum logical index
 """
 mini(v::AutoVector) = v.mini
 
 """
     maxi(v::AutoVector)
-maxi(v) gives the maximum index
+Maximum logical index
 """
 maxi(v::AutoVector) = v.maxi
 
@@ -96,15 +96,17 @@ import Base.length
 
 """
     length(v::AutoVector)
-length(v) gives the logical length
+Logical length
 """
 length(v::AutoVector) = v.maxi-v.mini+1
 
 """
-    arange(v::AutoVector)
-arange(v) gives the range of an AutoVector given as a:b
+    avrange(v::AutoVector)
+avrange(v) or arange(v) gives the logical range as mini:maxi
 """
-arange(v::AutoVector) = mini(v):maxi(v)
+avrange(v::AutoVector) = mini(v):maxi(v)
+
+arange = avrange
 
 """
     olaprange(v::AutoVector,w::AutoVector)
@@ -114,19 +116,19 @@ olaprange(v::AutoVector,w::AutoVector) = max(mini(v),mini(w)):min(maxi(v),maxi(w
 
 """
     avlocation(v::AutoVector,i)
-avlocation(v,i) gives the physical location of logical index i
+avlocation(v,i) gives the data location of logical index i
 """
 avlocation(v::AutoVector,i) = i-v.mini+v.miniloc+1
 
 """
     avlocmin(v::AutoVector)
-avlocmin(v) gives the physical location of mini(v)
+avlocmin(v) gives the data location of mini(v)
 """
 avlocmin(v::AutoVector) = v.miniloc+1
 
 """
     avlocmax(v::AutoVector)
-avlocmax(v) gives the physical location of mini(v)
+avlocmax(v) gives the data location of mini(v)
 """
 avlocmax(v::AutoVector) = v.maxi-v.mini+v.miniloc+1
 
