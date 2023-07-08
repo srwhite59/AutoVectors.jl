@@ -73,7 +73,7 @@ end
     makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
 
 Create an AutoVector that holds Vectors as elements, an AutoVecotr of Vectors. The zero default Vector
-is veczero
+is veczero.
 """
 function makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
     dat = [deepcopy(veczero)]
@@ -82,13 +82,13 @@ end
 
 """
     mini(v::AutoVector)
-Minimum logical index
+Minimum logical index.
 """
 mini(v::AutoVector) = v.mini
 
 """
     maxi(v::AutoVector)
-Maximum logical index
+Maximum logical index.
 """
 maxi(v::AutoVector) = v.maxi
 
@@ -96,7 +96,7 @@ import Base.length
 
 """
     length(v::AutoVector)
-Logical length
+Logical length.
 """
 length(v::AutoVector) = v.maxi-v.mini+1
 
@@ -134,7 +134,8 @@ avlocmax(v::AutoVector) = v.maxi-v.mini+v.miniloc+1
 
 """
     avvec(v::AutoVector)
-avvec(v) creates a standard vector with all values from mini to maxi
+avvec(v) creates a standard Vector with all values from mini to maxi; the new Vector does not know mini;
+it only knows its length, given by maxi-mini+1.
 """
 avvec(v::AutoVector) = v.dat[avlocmin(v):avlocmax(v)]
 
@@ -158,7 +159,7 @@ end
 
 """
     clear!(v::AutoVector)
-Resets v to empty
+Resets v to empty.
 """
 function clear!(v::AutoVector{T}) where {T}
 	v.mini = 1
@@ -314,7 +315,7 @@ end
 """
     doprint([file descriptor],v::AutoVector; spacing = 1)
 
-Print to standard output or a file all the elements
+Print to standard output or a file all the elements.
 """
 function doprint(v::AutoVector; spacing = 1)
     for i=mini(v):maxi(v)
