@@ -21,8 +21,40 @@ using Test
 	v = AutoVector(vs,4,8)
 	v[5]
     end
+    function checklots()
+	passedall = true
+	v = AutoVector(0)
+	passedall = passedall && v[1] == 0
+	passedall = passedall && v[10] == 0
+	passedall = passedall && avrange(v) == 1:0
+	passedall = passedall && length(v) == 0
+	passedall = passedall && mini(v) == 1
+	passedall = passedall && maxi(v) == 0
+	r = AutoVector(0.0)
+	r[1] = 1.0
+	r[2] = 2.0
+	passedall = passedall && avrange(r) == 1:2
+	w = copy(r)
+	z = convolve(r,w)
+	passedall = passedall && avrange(z) == 2:4
+	passedall = passedall && avvec(z) == [1.0,4.0,4.0]
+	shz = applyshift(z,-2)
+	passedall = passedall && avrange(shz) == 0:2
+	revz = applyshift(z)
+	passedall = passedall && avrange(revz) == -4:-2
+	passedall = passedall && revz[-4] == z[4]
+	z[8] = 1e-20
+	passedall = passedall && avrange(z) == 2:8
+	shrink!(z,1e-14)
+	passedall = passedall && avrange(z) == 2:4
+	clear!(z)
+	passedall = passedall && length(z) == 0
+	passedall
+    end
+
     @test checkinit1() == 0.0
     @test checkinit2() == 0.0
     @test checkinit3() == sin(5/pi)
     @test checkinit4() == sin(5/pi)
+    @test checkinit4() == true
 end

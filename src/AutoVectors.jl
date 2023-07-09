@@ -491,7 +491,8 @@ avnorm(v::AutoVector) = norm(v.dat[avlocmin(v):avlocmax(v)])
 Create a new AutoVector shifted to left by offset, sharing the same data array.
 """
 function applyshift(x::AutoVector,offset::Integer)
-    AutoVector(x.def,x.mini+offset,x.maxi+offset,x.miniloc,x.dat)
+    T = typeof(x.def)
+    AutoVector{T}(x.def,x.mini+offset,x.maxi+offset,x.miniloc,x.dat)
 end
 
 #=
@@ -580,7 +581,8 @@ A reflection about the origin; the new AutoVector goes from -maxi to -mini.
 """
 function reverse_ind(x::AutoVector)
     newminiloc = length(x.dat) - (x.miniloc + x.maxi - x.mini + 1)
-    AutoVector(deepcopy(x.def),-x.maxi,-x.mini,newminiloc,vec(reverse(x.dat)))
+    T = typeof(x.def)
+    AutoVector{T}(deepcopy(x.def),-x.maxi,-x.mini,newminiloc,vec(reverse(x.dat)))
 end
 
 const autovector = AutoVector
