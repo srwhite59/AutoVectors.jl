@@ -475,6 +475,7 @@ function makeauto(v::Vector{T};offset=nothing, firstindex=nothing, cutoff=0.0) w
     res = AutoVector(zero(T))
     if !(offset == nothing || firstindex == nothing)
 	error("You can't specify both offset and firstindex in makeauto")
+    end
     offset == nothing && firstindex != nothing && (offset = 1-firstindex)
     offset == nothing && firstindex == nothing && (offset = 0)
     if cutoff == 0.0
