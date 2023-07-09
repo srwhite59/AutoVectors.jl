@@ -461,16 +461,34 @@ end
 #end
 
 """
-    makeauto(v::Vector{Float64},offset::Integer)
-Make a new AutoVector out of v, shifting elements to the left by offset. Produces new data vector.
+    makeauto(v::Vector{T};offset=nothing, firstindex=nothing, cutoff=0.0) where T
+Make an AutoVector out of a Vector, producing a new data vector.
+If offset is supplied, shifts data to left by offset.
+If firstindex is supplied, it makes mini=firstindex
+You can't specify both offset and firstindex.
+With cutoff nonzero, elements are only put in if abs(el) > cutoff
+To put in a part of a Vector at a particular range, say putting elements 2 to 4 at
+positions 5 to 7, do this:
+makeauto(v[2:4],firstindex=5)
 """
-function makeauto(v::Vector{Float64},offset::Integer)
-    res = AutoVector(0.0)
-    for i=1:length(v)
-	res[i-offset] = v[i]
+function makeauto(v::Vector{T};offset=nothing, firstindex=nothing, cutoff=0.0) where T
+    res = AutoVector(zero(T))
+    if !(offset == nothing || firstindex == nothing)
+	error("You can't specify both offset and firstindex in makeauto")
+    offset == nothing && firstindex != nothing && (offset = 1-firstindex)
+    offset == nothing && firstindex == nothing && (offset = 0)
+    if cutoff == 0.0
+	for i=1:length(v)
+	    res[i-offset] = v[i]
+	end
+    else
+	for i=1:length(v)
+	    abs(v[i]) > cutoff && (res[i-offset] = v[i])
+	end
     end
     res
 end
+#=
 function makeauto(v::Vector{Float64},offset::Integer,cutoff::Float64)
     res = AutoVector(0.0)
     for i=1:length(v)
@@ -479,6 +497,7 @@ function makeauto(v::Vector{Float64},offset::Integer,cutoff::Float64)
     end
     res
 end
+=#
 
 """
     avnorm(v::AutoVector)

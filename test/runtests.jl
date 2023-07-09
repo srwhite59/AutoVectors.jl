@@ -34,13 +34,14 @@ using Test
 	r[1] = 1.0
 	r[2] = 2.0
 	passedall = passedall && avrange(r) == 1:2
+	passedall = passedall && avnorm(r) == sqrt(5.0)
 	w = copy(r)
 	z = convolve(r,w)
 	passedall = passedall && avrange(z) == 2:4
 	passedall = passedall && avvec(z) == [1.0,4.0,4.0]
 	shz = applyshift(z,-2)
 	passedall = passedall && avrange(shz) == 0:2
-	revz = applyshift(z)
+	revz = reverse_ind(z)
 	passedall = passedall && avrange(revz) == -4:-2
 	passedall = passedall && revz[-4] == z[4]
 	z[8] = 1e-20
@@ -49,6 +50,11 @@ using Test
 	passedall = passedall && avrange(z) == 2:4
 	clear!(z)
 	passedall = passedall && length(z) == 0
+	v = [1.0,2.0]
+	vv = makeauto(v,offset=3)
+	passedall = passedall && vv[-2] == 1.0
+	vv = makeauto(v,firstindex=3)
+	passedall = passedall && vv[3] == 1.0
 	passedall
     end
 
@@ -56,5 +62,5 @@ using Test
     @test checkinit2() == 0.0
     @test checkinit3() == sin(5/pi)
     @test checkinit4() == sin(5/pi)
-    @test checkinit4() == true
+    @test checklots() == true
 end
