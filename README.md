@@ -68,7 +68,7 @@ julia> arange(v)
 ```
 
 You can add and subtract AutoVectors (e.g. v+w, v-w), add or subtract a constant to all elements (v+a,v-a),  
-and multiply by a constant, a*v or v*a, and v/a. Broadcasting (v .* w) mostly doesn't work, since the lengths are
+and multiply by a constant, a\*v or v\*a, and v/a. Broadcasting (v .\* w) mostly doesn't work, since the lengths are
 generally different, but there is a function pointmult(v,w) which does the same thing.
 A number of other useful functions are also implemented, such as dot products and convolutions. 
 
