@@ -54,7 +54,7 @@ julia> doprint(v)
 
 10 2.718281828459045
 
-julia> arange(v)
+julia> avrange(v)
 
 -3:10
 
@@ -62,7 +62,7 @@ julia> v[15]      # No resizing, give default
 
 0.0
 
-julia> arange(v)
+julia> avrange(v)
 
 -3:10
 ```
