@@ -18,6 +18,7 @@ maxi(v::AutoVector)
 length(v::AutoVector)
 arange(v::AutoVector)
 avvec(v::AutoVector)
+subav(v::AutoVector,i::Integer,j::Integer)
 avdot(x::AutoVector,y::AutoVector)
 convolve(x::AutoVector,y::AutoVector,cut=1.0e-14) 
 doprint(v::AutoVector)
@@ -35,6 +36,8 @@ makeauto(v::Vector{Float64},offset::Integer)
 applyshift(x::AutoVector,offset::Integer)
 shrink!(x::AutoVector,cut)
 reverse_ind(x::AutoVector)
+fftav(x::AutoVector{Float64},delta)
+ifftav(x::AutoVector{Complex128},freqspacing::Float64,len::Integer)
 
 ```
 
