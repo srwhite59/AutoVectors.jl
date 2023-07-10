@@ -619,21 +619,25 @@ function reverse_ind(x::AutoVector)
 end
 
 """
-    fftav(x::AutoVector{Float64},delta)
+    fftav(f::AutoVector{Float64},delta)
 
-For a function x_i defined on a uniform grid with spacing delta, return the Fourier Transform and
+For a function f_i defined on a uniform grid with spacing delta, returns the Fourier Transform and
 frequency spacing, and the length of the vector used in the FFT (to be used in ifftav). 
 The output AutoVector will be complex.
+The FT is defined as
+
+``F(\\omega) = \\frac{1}{\sqrt{2 \pi}} \int dx e^{-i k x} f(x)``
+
 """
-function fftav(x::AutoVector{Float64},delta)
-    maxind = max(abs(maxi(x)),abs(mini(x)))
+function fftav(f::AutoVector{Float64},delta)
+    maxind = max(abs(maxi(f)),abs(mini(f)))
     len = 2*maxind+1
     v = zeros(len)
-    for i=0:maxi(x)
-        v[i+1] = x[i]
+    for i=0:maxi(f)
+        v[i+1] = f[i]
     end
-    for i=-1:-1:mini(x)
-        v[len+i+1] = x[i]
+    for i=-1:-1:mini(f)
+        v[len+i+1] = f[i]
     end
     v .*= delta/sqrt(2*pi)
     o = fftshift(fft(v))
@@ -647,18 +651,21 @@ function fftav(x::AutoVector{Float64},delta)
 end
 
 """
-ifftav(x::AutoVector{ComplexF64},freqspacing,maxind)
+ifftav(F::AutoVector{ComplexF64},freqspacing,maxind)
 
-For a function x_i defined on a uniform frequency grid with spacing freqspacing, 
+For a function F_i defined on a uniform frequency grid with spacing freqspacing, 
 returns the Inverse Fourier Transform.
+
+``f(\\omega) = \\frac{1}{\sqrt{2 \pi}} \int dk e^{i k x} F(k)``
+
 """
-function ifftav(x::AutoVector{ComplexF64},freqspacing::Float64,len::Integer)
+function ifftav(F::AutoVector{ComplexF64},freqspacing::Float64,len::Integer)
     v = zeros(ComplexF64,len)
     for i=0:maxi(x)
-        v[i+1] = x[i]
+        v[i+1] = F[i]
     end
-    for i=-1:-1:mini(x)
-        v[len+i+1] = x[i]
+    for i=-1:-1:mini(F)
+        v[len+i+1] = F[i]
     end
     o = fftshift(ifft(v))
     oa = AutoVector(0.0)
