@@ -7,6 +7,7 @@
 
 ```@docs
 AutoVector(0.0)
+makeauto(v::Vector;offset=nothing, firstindex=nothing, cutoff=0.0)
 makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
 ```
 
@@ -32,7 +33,6 @@ avtriple(x::AutoVector,y::AutoVector,z::AutoVector)
 axpy!(y::AutoVector,a::Float64,x::AutoVector) 
 axpy!(y::AutoVector,a::Float64,x::AutoVector, cutoff::Float64) 
 avtripconv(u::AutoVector,g::AutoVector,v::AutoVector)
-makeauto(v::Vector{Float64},offset::Integer)
 applyshift(x::AutoVector,offset::Integer)
 shrink!(x::AutoVector,cut)
 reverse_ind(x::AutoVector)
