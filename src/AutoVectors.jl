@@ -635,7 +635,7 @@ function fftav(x::AutoVector{Float64},delta)
     for i=-1:-1:mini(x)
         v[len+i+1] = x[i]
     end
-    v .*= 1/sqrt(2*pi)
+    v .*= delta/sqrt(2*pi)
     o = fftshift(fft(v))
     oa = AutoVector(0.0+0.0im)
     ishift = div(length(o),2)+1
