@@ -21,6 +21,14 @@ using Test
 	v = AutoVector(vs,4,8)
 	v[5]
     end
+    function checkinit5()
+	v = AutoVector()
+	v[3]=2.0
+	v3 = v*3.0
+	vv3 = 3.0*v
+	vd3 = v/3.0
+	v3[3] == 6.0 && vv3[3] == 6.0 && vd3[3] = 2.0/3.0
+    end
     function checklots()
 	passedall = true
 	v = AutoVector(0)
@@ -68,5 +76,6 @@ using Test
     @test checkinit2() == 0.0
     @test checkinit3() == sin(5/pi)
     @test checkinit4() == sin(5/pi)
+    @test checkinit5() == true
     @test checklots() == true
 end

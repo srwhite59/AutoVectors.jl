@@ -226,15 +226,16 @@ function -(v::AutoVector,w::Float64)
     AutoVector(i->v[i] .- w,v.mini,v.maxi)
 end
 
-import Base.*
+import Base.*, Base./
 
 "Multiply all elements of a AutoVector by a Float64"
 function *(f::Real,v::AutoVector)
     newv = deepcopy(v)
-    newv.dat *= f
+    newv.dat .*= f
     newv
 end
 function *(v::AutoVector,f::Real) f*v end
+function /(v::AutoVector,f::Real) v*(1/f) end
 
 """
     *(coef::Vector{Float64},v::Vector{AutoVector{Float64}})
@@ -260,29 +261,6 @@ function pointmult(x::AutoVector,y::AutoVector)
     @inbounds xy = Float64[fast(x,i)*fast(y,i) for i=a:b]
     AutoVector(xy,a,b)
 end
-#=
-import Base.iterate
-function iterate(v::AutoVector)
-    length(v) == 0 && return nothing
-    (v[mini(v)],mini(v))
-end
-function iterate(v::AutoVector,i)
-    length(v) == 0 && return nothing
-    i >= maxi(v) && return nothing
-    (v[i+1],i+1)
-end
-#import Base: .*
-#function .*(v::AutoVector,w::AutoVector)
-#    pointmult(x,y)
-#end
-
-import Base.broadcast
-#Base.broadcast(::typeof(*), ...)"
-#function broadcast(*,x::AutoVector,y::AutoVector)
-function broadcast(::typeof(*),x::AutoVector,y::AutoVector)
-    pointmult(x,y)
-end
-=#
 
 """
     avdot(x::AutoVector,y::AutoVector)
@@ -457,10 +435,6 @@ function convolve(x::AutoVector,y::AutoVector,cut=1.0e-14)		# use absolute cutof
     res
 end
 
-#function makeautotake(v::Vector{Float64},offset::Integer)		# take v as the data; very fast
-#    AutoVector(0.0,1-offset,length(v)-offset,0,v)
-#end
-
 """
     makeauto(v::Vector{T};offset=nothing, firstindex=nothing, cutoff=0.0) where T
 Make an AutoVector out of a Vector, producing a new data vector.
@@ -490,16 +464,6 @@ function makeauto(v::Vector{T};offset=nothing, firstindex=nothing, cutoff=0.0) w
     end
     res
 end
-#=
-function makeauto(v::Vector{Float64},offset::Integer,cutoff::Float64)
-    res = AutoVector(0.0)
-    for i=1:length(v)
-	vi = v[i]
-	abs(vi) > cutoff && ( res[i-offset] = v[i] )
-    end
-    res
-end
-=#
 
 """
     avnorm(v::AutoVector)
@@ -527,17 +491,6 @@ function subav(x::AutoVector,newmini::Integer,newmaxi::Integer)
     T = typeof(x.def)
     AutoVector{T}(x.def,newmini,newmaxi,x.miniloc+minshift,x.dat)
 end
-
-#=
-function symmetrize!(m::Array{Float64,2})
-    n = size(m,1)
-    for i=1:n
-	for j=i:n
-	    m[i,j] = m[j,i] = 0.5 * (m[i,j]+m[j,i])
-	end
-    end
-end
-=#
 
 function domin(xd,st,ma,cut)
     @inbounds for i=st:ma
@@ -574,38 +527,6 @@ function shrink!(x::AutoVector,cut)
     x.miniloc += newmin - x.mini
     x.mini = newmin
 end
-function shrinkold!(x::AutoVector,cut)
-    newmin = maxi(x)+1
-    for i=arange(x)
-	if(abs(fast(x,i)) > cut)
-	    newmin = i
-	    break
-	end
-    end
-    if newmin == maxi(x)+1 
-	clear!(x)
-	return
-    end
-    newmax = newmin-1
-    for i=maxi(x):-1:newmin
-	if(abs(fast(x,i)) > cut)
-	    newmax = i
-	    break
-	end
-    end
-    x.maxi = newmax
-    x.miniloc += newmin - x.mini
-    x.mini = newmin
-end
-
-#=
-function eigsym(Marg)
-    M = copy(Marg)
-    symmetrize!(M)
-    F = eigen(M)
-    F.values,F.vectors
-end
-=#
 
 """
     reverse_ind(x::AutoVector)
