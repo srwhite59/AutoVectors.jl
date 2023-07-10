@@ -647,13 +647,13 @@ function fftav(x::AutoVector{Float64},delta)
 end
 
 """
-ifftav(x::AutoVector{Complex128},freqspacing,maxind)
+ifftav(x::AutoVector{ComplexF64},freqspacing,maxind)
 
 For a function x_i defined on a uniform frequency grid with spacing freqspacing, 
 returns the Inverse Fourier Transform.
 """
-function ifftav(x::AutoVector{Complex128},freqspacing::Float64,len::Integer)
-    v = zeros(Complex128,len)
+function ifftav(x::AutoVector{ComplexF64},freqspacing::Float64,len::Integer)
+    v = zeros(ComplexF64,len)
     for i=0:maxi(x)
         v[i+1] = x[i]
     end
