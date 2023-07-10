@@ -37,7 +37,7 @@ applyshift(x::AutoVector,offset::Integer)
 shrink!(x::AutoVector,cut)
 reverse_ind(x::AutoVector)
 fftav(x::AutoVector{Float64},delta)
-ifftav(x::AutoVector{Complex128},freqspacing::Float64,len::Integer)
+ifftav(x::AutoVector{ComplexF64},freqspacing::Float64,len::Integer)
 
 ```
 
