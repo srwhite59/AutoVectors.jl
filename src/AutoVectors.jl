@@ -3,7 +3,7 @@ module AutoVectors
 export AutoVector, autovector, mini, maxi, clear!, copy, avdot, doprint, axpy!, convolve, 
 		makeauto,makeautotake,applyshift,avtriple, fast, avrange, arange,
 		avlocation, avlocmin,avlocmax,avvec, shrink!, avnorm, avtripconv,reverse_ind,
-		makeAutoVectorOfVecs,pointmult
+		makeAutoVectorOfVecs,pointmult,fftav,ifftav
 
 using LinearAlgebra
 using DSP		# for conv = convolution
@@ -315,7 +315,7 @@ end
 """
     doprint([file descriptor],v::AutoVector; spacing = 1)
 
-Print to standard output or a file all the elements.
+Print all the elements to standard output or a file, with indices scaled by spacing.
 """
 function doprint(v::AutoVector; spacing = 1)
     for i=mini(v):maxi(v)
@@ -604,6 +604,58 @@ function reverse_ind(x::AutoVector)
     T = typeof(x.def)
     AutoVector{T}(deepcopy(x.def),-x.maxi,-x.mini,newminiloc,vec(reverse(x.dat)))
 end
+
+"""
+    fftav(x::AutoVector,delta,maxind)
+
+For a function x_i defined on a uniform grid with spacing delta, return the Fourier Transform and
+frequency spacing. The input AutoVector can be real or complex; the output will be complex.
+"""
+function fftav(x::AutoVector,delta,maxind)
+    len = 2*maxind+1
+    v = zeros(len)
+    for i=0:maxi(x)
+        v[i+1] = x[i] / sqrt(2*pi)
+    end
+    for i=-1:-1:mini(x)
+        v[len+i+1] = x[i] / sqrt(2*pi)
+    end
+    o = fftshift(fft(v))
+    oa = AutoVector(0.0+0.0im)
+    ishift = div(length(o),2)+1
+    for i=1:length(o)
+        abs(o[i]) > 1.0e-12 && (oa[i-ishift] = o[i])
+    end
+    freqspacing = 2*pi/len/delta
+    (oa,freqspacing)
+end
+
+"""
+    ifftav(x::AutoVector,freqspacing,maxind)
+
+For a function x_i defined on a uniform frequency grid with spacing freqspacing, 
+return the Inverse Fourier Transform.
+"""
+function ifftav(x::AutoVector,freqspacing,maxind)
+    len = 2*maxind+1
+    v = zeros(Complex128,len)
+    for i=0:maxi(x)
+        v[i+1] = x[i]
+    end
+    for i=-1:-1:mini(x)
+        v[len+i+1] = x[i]
+    end
+    o = fftshift(ifft(v))
+    oa = AutoVector(0.0)
+    ishift = div(length(o),2)+1
+    for i=1:length(o)
+        abs(o[i]) > 1.0e-12 && (oa[i-ishift] = real(o[i]))
+    end
+    oa.dat *= freqspacing / sqrt(2*pi) * len
+    oa
+end
+
+
 
 const autovector = AutoVector
 
