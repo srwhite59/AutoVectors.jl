@@ -521,6 +521,8 @@ end
 Create a new AutoVector with the indicated range, sharing the same data array
 """
 function subav(x::AutoVector,newmini::Integer,newmaxi::Integer)
+    @assert newmini >= mini(x)
+    @assert newmaxi <= maxi(x)
     minshift = newmini-mini(x)
     T = typeof(x.def)
     AutoVector{T}(x.def,newmini,newmaxi,x.miniloc+minshift,x.dat)
