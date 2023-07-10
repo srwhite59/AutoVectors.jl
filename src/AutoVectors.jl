@@ -7,6 +7,7 @@ export AutoVector, autovector, mini, maxi, clear!, copy, avdot, doprint, axpy!, 
 
 using LinearAlgebra
 using DSP		# for conv = convolution
+using AbstractFFTs,FFTW
 
 import Base.deepcopy, Base.getindex, Base.setindex!
 

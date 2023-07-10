@@ -55,6 +55,8 @@ using Test
 	passedall = passedall && vv[-2] == 1.0
 	vv = makeauto(v,firstindex=3)
 	passedall = passedall && vv[3] == 1.0
+	F = fft(vv,1.0,16)
+	doprint(F)
 	passedall
     end
 
