@@ -58,9 +58,9 @@ using Test
 	passedall = passedall && vv[-2] == 1.0
 	vv = makeauto(v,firstindex=3)
 	passedall = passedall && vv[3] == 1.0
-	F,freqsp = fftav(vv,1.0)
-	#@show freqsp
-	#doprint(F)
+	F,freqsp,len = fftav(vv,1.0)
+	rf1 = real(F[1])
+	passedall = passedall && abs(rf1+0.9492373742261744) < 1.0e-11
 	passedall
     end
 

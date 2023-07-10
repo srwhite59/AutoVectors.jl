@@ -621,12 +621,15 @@ end
 """
     fftav(f::AutoVector{Float64},delta)
 
-For a function f_i defined on a uniform grid with spacing delta, returns the Fourier Transform and
-frequency spacing, and the length of the vector used in the FFT (to be used in ifftav). 
-The output AutoVector will be complex.
+For a real function f(x) defined by sampling on a uniform grid with spacing delta, 
+returns a tuple (F, freqsp, len), where F is the Fourier Transform as an AutoVector(ComplexF64), 
+freqsp is the frequency spacing of F, and len the length of the vector used in
+the FFT (to be used in ifftav). Implicitly, the function is assumed to be zero
+outside the range of the input. The normalizations are different from the usual discrete
+FT conventions, incorporating the spacing, and corresponding to a continuous integral.
 The FT is defined as
 
-``F(\\omega) = \\frac{1}{\\sqrt{2 \\pi}} \\int dx e^{-i k x} f(x)``
+``F(k) = \\frac{1}{\\sqrt{2 \\pi}} \\int dx e^{-i k x} f(x)``
 
 """
 function fftav(f::AutoVector{Float64},delta)
@@ -656,7 +659,7 @@ ifftav(F::AutoVector{ComplexF64},freqspacing,maxind)
 For a function F_i defined on a uniform frequency grid with spacing freqspacing, 
 returns the Inverse Fourier Transform.
 
-``f(\\omega) = \\frac{1}{\\sqrt{2 \\pi}} \\int dk e^{i k x} F(k)``
+``f(x) = \\frac{1}{\\sqrt{2 \\pi}} \\int dk e^{i k x} F(k)``
 
 """
 function ifftav(F::AutoVector{ComplexF64},freqspacing::Float64,len::Integer)
