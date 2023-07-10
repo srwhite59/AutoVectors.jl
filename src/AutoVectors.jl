@@ -626,7 +626,7 @@ frequency spacing, and the length of the vector used in the FFT (to be used in i
 The output AutoVector will be complex.
 The FT is defined as
 
-``F(\\omega) = \\frac{1}{\\sqrt{2 \\pi}} \int dx e^{-i k x} f(x)``
+``F(\\omega) = \\frac{1}{\\sqrt{2 \\pi}} \\int dx e^{-i k x} f(x)``
 
 """
 function fftav(f::AutoVector{Float64},delta)
@@ -656,7 +656,7 @@ ifftav(F::AutoVector{ComplexF64},freqspacing,maxind)
 For a function F_i defined on a uniform frequency grid with spacing freqspacing, 
 returns the Inverse Fourier Transform.
 
-``f(\\omega) = \\frac{1}{\\sqrt{2 \\pi}} \int dk e^{i k x} F(k)``
+``f(\\omega) = \\frac{1}{\\sqrt{2 \\pi}} \\int dk e^{i k x} F(k)``
 
 """
 function ifftav(F::AutoVector{ComplexF64},freqspacing::Float64,len::Integer)
