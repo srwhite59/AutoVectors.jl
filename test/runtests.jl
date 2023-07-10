@@ -35,6 +35,9 @@ using Test
 	r[2] = 2.0
 	passedall = passedall && avrange(r) == 1:2
 	passedall = passedall && avnorm(r) == sqrt(5.0)
+	subr = subav(r,2,2)
+	passedall = passedall && avrange(subr) == 2:2
+	passedall = passedall && subr[2] == 2.0
 	w = copy(r)
 	z = convolve(r,w)
 	passedall = passedall && avrange(z) == 2:4
@@ -55,8 +58,9 @@ using Test
 	passedall = passedall && vv[-2] == 1.0
 	vv = makeauto(v,firstindex=3)
 	passedall = passedall && vv[3] == 1.0
-	F = fft(vv,1.0,16)
-	doprint(F)
+	F,freqsp = fftav(vv,1.0)
+	#@show freqsp
+	#doprint(F)
 	passedall
     end
 

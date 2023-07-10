@@ -1,7 +1,7 @@
 module AutoVectors
 
 export AutoVector, autovector, mini, maxi, clear!, copy, avdot, doprint, axpy!, convolve, 
-		makeauto,makeautotake,applyshift,avtriple, fast, avrange, arange,
+		makeauto,makeautotake,applyshift,subav, avtriple, fast, avrange, arange,
 		avlocation, avlocmin,avlocmax,avvec, shrink!, avnorm, avtripconv,reverse_ind,
 		makeAutoVectorOfVecs,pointmult,fftav,ifftav
 
@@ -516,6 +516,16 @@ function applyshift(x::AutoVector,offset::Integer)
     AutoVector{T}(x.def,x.mini+offset,x.maxi+offset,x.miniloc,x.dat)
 end
 
+"""
+    subav(x::AutoVector,newmini::Integer,newmaxi::Integer)
+Create a new AutoVector with the indicated range, sharing the same data array
+"""
+function subav(x::AutoVector,newmini::Integer,newmaxi::Integer)
+    minshift = newmini-mini(x)
+    T = typeof(x.def)
+    AutoVector{T}(x.def,newmini,newmaxi,x.miniloc+minshift,x.dat)
+end
+
 #=
 function symmetrize!(m::Array{Float64,2})
     n = size(m,1)
@@ -607,13 +617,15 @@ function reverse_ind(x::AutoVector)
 end
 
 """
-    fftav(x::AutoVector,delta,maxind)
+    fftav(x::AutoVector,delta)
 
 For a function x_i defined on a uniform grid with spacing delta, return the Fourier Transform and
 frequency spacing. The input AutoVector can be real or complex; the output will be complex.
 """
-function fftav(x::AutoVector,delta,maxind)
+function fftav(x::AutoVector,delta)
+    maxind = max(abs(maxi(x)),abs(mini(x)))
     len = 2*maxind+1
+    v = avvec(x)
     v = zeros(len)
     for i=0:maxi(x)
         v[i+1] = x[i] / sqrt(2*pi)
