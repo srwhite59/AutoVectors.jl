@@ -1,7 +1,7 @@
 name = "AutoVectors"
 uuid = "dac988ce-a3dc-42da-8c49-b1e833185731"
 authors = ["Steve White"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
