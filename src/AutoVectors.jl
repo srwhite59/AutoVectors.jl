@@ -77,8 +77,9 @@ Create an AutoVector that holds Vectors as elements, an AutoVecotr of Vectors. T
 is veczero.
 """
 function makeAutoVectorOfVecs(veczero::Vector,mini::Integer,maxi::Integer)
-    dat = [deepcopy(veczero)]
-    AutoVector(veczero,mini,maxi,0,dat)
+    dat = [deepcopy(veczero) for i=mini:maxi]
+    T = typeof(veczero)
+    AutoVector{T}(veczero,mini,maxi,0,dat)
 end
 
 """

@@ -27,7 +27,7 @@ using Test
 	v3 = v*3.0
 	vv3 = 3.0*v
 	vd3 = v/3.0
-	v3[3] == 6.0 && vv3[3] == 6.0 && vd3[3] = 2.0/3.0
+	v3[3] == 6.0 && vv3[3] == 6.0 && vd3[3] == 2.0/3.0
     end
     function checklots()
 	passedall = true
@@ -69,6 +69,11 @@ using Test
 	F,freqsp,len = fftav(vv,1.0)
 	rf1 = real(F[1])
 	passedall = passedall && abs(rf1+0.9492373742261744) < 1.0e-11
+
+	veczero = zeros(4)
+	v = makeAutoVectorOfVecs(zeros(8),2,4)
+	v[1] = [1.0,2.0,3.0,4.0]
+	passedall = passedall && v[1][2] == 2.0 && v[2][2] == 0.0
 	passedall
     end
 
